@@ -9,6 +9,7 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCasePlatform.h>
 #import <UIKit/UIKit.h>
+#import <FBSnapshotTestCase/UIDevice+ExtendedModelName.h>
 
 BOOL FBSnapshotTestCaseIs64Bit(void)
 {
@@ -37,7 +38,7 @@ NSString *FBDeviceAgnosticNormalizedFileName(NSString *fileName)
     CGSize screenSize = keyWindow.bounds.size;
     NSString *os = device.systemVersion;
 
-    fileName = [NSString stringWithFormat:@"%@_%@%@_%.0fx%.0f", fileName, device.model, os, screenSize.width, screenSize.height];
+    fileName = [NSString stringWithFormat:@"%@_%@%@_%.0fx%.0f", fileName, [device extendedModelName], os, screenSize.width, screenSize.height];
 
     NSMutableCharacterSet *invalidCharacters = [NSMutableCharacterSet new];
     [invalidCharacters formUnionWithCharacterSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -52,7 +53,7 @@ NSString *FBDeviceAgnosticNormalizedFileNameFromOption(NSString *fileName, FBSna
 {
     if ((option & FBSnapshotTestCaseAgnosticOptionDevice) == FBSnapshotTestCaseAgnosticOptionDevice) {
         UIDevice *device = [UIDevice currentDevice];
-        fileName = [fileName stringByAppendingFormat:@"_%@", device.model];
+        fileName = [fileName stringByAppendingFormat:@"_%@", [device extendedModelName]];
     }
 
     if ((option & FBSnapshotTestCaseAgnosticOptionOS) == FBSnapshotTestCaseAgnosticOptionOS) {
