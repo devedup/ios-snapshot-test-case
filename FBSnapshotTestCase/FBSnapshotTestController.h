@@ -157,6 +157,7 @@ extern NSString *const FBDiffedImageKey;
  @returns An image.
  */
 - (nullable UIImage *)referenceImageForSelector:(SEL)selector
+                                         device:(nullable NSString *)device
                                      identifier:(nullable NSString *)identifier
                                           error:(NSError **)errorPtr;
 

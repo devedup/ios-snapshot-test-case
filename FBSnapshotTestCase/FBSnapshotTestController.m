@@ -278,7 +278,7 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
                                      tolerance:(CGFloat)tolerance
                                          error:(NSError **)errorPtr
 {
-    UIImage *referenceImage = [self referenceImageForSelector:selector identifier:identifier error:errorPtr];
+    UIImage *referenceImage = [self referenceImageForSelector:selector device:device identifier:identifier error:errorPtr];
     if (nil != referenceImage) {
         UIImage *snapshot = [self _imageForViewOrLayer:viewOrLayer];
         BOOL imagesSame = [self compareReferenceImage:referenceImage toImage:snapshot tolerance:tolerance error:errorPtr];

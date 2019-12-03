@@ -170,7 +170,7 @@
 - (BOOL)compareSnapshotOfView:(UIView *)view
      referenceImagesDirectory:(NSString *)referenceImagesDirectory
            imageDiffDirectory:(NSString *)imageDiffDirectory
-                       device:(nullable NSString *)device
+                       device:(NSString *)device
                    identifier:(NSString *)identifier
                     tolerance:(CGFloat)tolerance
                         error:(NSError **)errorPtr
@@ -185,12 +185,14 @@
 }
 
 - (BOOL)referenceImageRecordedInDirectory:(NSString *)referenceImagesDirectory
+                                   device:(NSString *)device
                                identifier:(NSString *)identifier
                                     error:(NSError **)errorPtr
 {
     NSAssert1(_snapshotController, @"%s cannot be called before [super setUp]", __FUNCTION__);
     _snapshotController.referenceImagesDirectory = referenceImagesDirectory;
     UIImage *referenceImage = [_snapshotController referenceImageForSelector:self.invocation.selector
+                                                                      device:device
                                                                   identifier:identifier
                                                                        error:errorPtr];
 
