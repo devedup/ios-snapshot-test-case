@@ -106,12 +106,14 @@ extern NSString *const FBDiffedImageKey;
  Performs the comparison of the layer.
  @param layer The Layer to snapshot.
  @param selector The test method being run.
+ @param device The name of the device, which is built into the folder output name
  @param identifier An optional identifier, used is there are muliptle snapshot tests in a given -test method.
  @param errorPtr An error to log in an XCTAssert() macro if the method fails (missing reference image, images differ, etc).
  @returns YES if the comparison (or saving of the reference image) succeeded.
  */
 - (BOOL)compareSnapshotOfLayer:(CALayer *)layer
                       selector:(SEL)selector
+                        device:(nullable NSString *)device
                     identifier:(nullable NSString *)identifier
                          error:(NSError **)errorPtr;
 
@@ -119,12 +121,14 @@ extern NSString *const FBDiffedImageKey;
  Performs the comparison of the view.
  @param view The view to snapshot.
  @param selector The test method being run.
+ @param device The name of the device, which is built into the folder output name
  @param identifier An optional identifier, used is there are muliptle snapshot tests in a given -test method.
  @param errorPtr An error to log in an XCTAssert() macro if the method fails (missing reference image, images differ, etc).
  @returns YES if the comparison (or saving of the reference image) succeeded.
  */
 - (BOOL)compareSnapshotOfView:(UIView *)view
                      selector:(SEL)selector
+                       device:(nullable NSString *)device
                    identifier:(nullable NSString *)identifier
                         error:(NSError **)errorPtr;
 
@@ -132,6 +136,7 @@ extern NSString *const FBDiffedImageKey;
  Performs the comparison of a view or layer.
  @param viewOrLayer The view or layer to snapshot.
  @param selector The test method being run.
+ @param device The name of the device, which is built into the folder output name
  @param identifier An optional identifier, used is there are muliptle snapshot tests in a given -test method.
  @param tolerance The percentage of pixels that can differ and still be considered 'identical'
  @param errorPtr An error to log in an XCTAssert() macro if the method fails (missing reference image, images differ, etc).
@@ -139,6 +144,7 @@ extern NSString *const FBDiffedImageKey;
  */
 - (BOOL)compareSnapshotOfViewOrLayer:(id)viewOrLayer
                             selector:(SEL)selector
+                              device:(nullable NSString *)device
                           identifier:(nullable NSString *)identifier
                            tolerance:(CGFloat)tolerance
                                error:(NSError **)errorPtr;

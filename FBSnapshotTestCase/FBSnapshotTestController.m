@@ -57,11 +57,13 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 - (BOOL)compareSnapshotOfLayer:(CALayer *)layer
                       selector:(SEL)selector
+                        device:(NSString *)device
                     identifier:(NSString *)identifier
                          error:(NSError **)errorPtr
 {
     return [self compareSnapshotOfViewOrLayer:layer
                                      selector:selector
+                                       device:device
                                    identifier:identifier
                                     tolerance:0
                                         error:errorPtr];
@@ -69,11 +71,13 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 - (BOOL)compareSnapshotOfView:(UIView *)view
                      selector:(SEL)selector
+                       device:(NSString *)device
                    identifier:(NSString *)identifier
                         error:(NSError **)errorPtr
 {
     return [self compareSnapshotOfViewOrLayer:view
                                      selector:selector
+                                       device:device
                                    identifier:identifier
                                     tolerance:0
                                         error:errorPtr];
@@ -81,22 +85,24 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 - (BOOL)compareSnapshotOfViewOrLayer:(id)viewOrLayer
                             selector:(SEL)selector
+                              device:(NSString *)device
                           identifier:(NSString *)identifier
                            tolerance:(CGFloat)tolerance
                                error:(NSError **)errorPtr
 {
     if (self.recordMode) {
-        return [self _recordSnapshotOfViewOrLayer:viewOrLayer selector:selector identifier:identifier error:errorPtr];
+        return [self _recordSnapshotOfViewOrLayer:viewOrLayer selector:selector device:device identifier:identifier error:errorPtr];
     } else {
-        return [self _performPixelComparisonWithViewOrLayer:viewOrLayer selector:selector identifier:identifier tolerance:tolerance error:errorPtr];
+        return [self _performPixelComparisonWithViewOrLayer:viewOrLayer selector:selector device:device identifier:identifier tolerance:tolerance error:errorPtr];
     }
 }
 
 - (UIImage *)referenceImageForSelector:(SEL)selector
+                                device:(NSString *)device
                             identifier:(NSString *)identifier
                                  error:(NSError **)errorPtr
 {
-    NSString *filePath = [self _referenceFilePathForSelector:selector identifier:identifier];
+    NSString *filePath = [self _referenceFilePathForSelector:selector device:device identifier:identifier];
     UIImage *image = [UIImage imageWithContentsOfFile:filePath];
     if (nil == image && NULL != errorPtr) {
         BOOL exists = [_fileManager fileExistsAtPath:filePath];
@@ -241,12 +247,13 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 }
 
 - (NSString *)_referenceFilePathForSelector:(SEL)selector
+                                     device:(NSString *)device
                                  identifier:(NSString *)identifier
 {
     NSString *fileName = [self _fileNameForSelector:selector
                                          identifier:identifier
                                        fileNameType:FBTestSnapshotFileNameTypeReference];
-    NSString *filePath = [_referenceImagesDirectory stringByAppendingPathComponent:self.folderName];
+    NSString *filePath = [_referenceImagesDirectory stringByAppendingPathComponent:device];
     filePath = [filePath stringByAppendingPathComponent:fileName];
     return filePath;
 }
@@ -266,6 +273,7 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 - (BOOL)_performPixelComparisonWithViewOrLayer:(id)viewOrLayer
                                       selector:(SEL)selector
+                                        device:(NSString *)device
                                     identifier:(NSString *)identifier
                                      tolerance:(CGFloat)tolerance
                                          error:(NSError **)errorPtr
@@ -287,21 +295,24 @@ typedef NS_ENUM(NSUInteger, FBTestSnapshotFileNameType) {
 
 - (BOOL)_recordSnapshotOfViewOrLayer:(id)viewOrLayer
                             selector:(SEL)selector
+                              device:(NSString *)device
                           identifier:(NSString *)identifier
                                error:(NSError **)errorPtr
 {
     UIImage *snapshot = [self _imageForViewOrLayer:viewOrLayer];
-    return [self _saveReferenceImage:snapshot selector:selector identifier:identifier error:errorPtr];
+    return [self _saveReferenceImage:snapshot selector:selector device:device identifier:identifier error:errorPtr];
 }
 
 - (BOOL)_saveReferenceImage:(UIImage *)image
                    selector:(SEL)selector
+                     device:(NSString *)device
                  identifier:(NSString *)identifier
                       error:(NSError **)errorPtr
 {
     BOOL didWrite = NO;
     if (nil != image) {
-        NSString *filePath = [self _referenceFilePathForSelector:selector identifier:identifier];
+        NSString *filePath = [self _referenceFilePathForSelector:selector device:device identifier:identifier];
+        NSLog(@"*** filePath is %@", filePath);
         NSData *pngData = UIImagePNGRepresentation(image);
         if (nil != pngData) {
             NSError *creationError = nil;

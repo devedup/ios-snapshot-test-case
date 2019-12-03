@@ -85,6 +85,7 @@
 #pragma mark - Public API
 
 - (NSString *)snapshotVerifyViewOrLayer:(id)viewOrLayer
+                                 device:(NSString *)device
                              identifier:(NSString *)identifier
                                suffixes:(NSOrderedSet *)suffixes
                               tolerance:(CGFloat)tolerance
@@ -115,7 +116,7 @@
 
     if (self.recordMode) {
         NSString *referenceImagesDirectory = [NSString stringWithFormat:@"%@%@", referenceImageDirectory, suffixes.firstObject];
-        BOOL referenceImageSaved = [self _compareSnapshotOfViewOrLayer:viewOrLayer referenceImagesDirectory:referenceImagesDirectory imageDiffDirectory:imageDiffDirectory identifier:(identifier) tolerance:tolerance error:&error];
+        BOOL referenceImageSaved = [self _compareSnapshotOfViewOrLayer:viewOrLayer referenceImagesDirectory:referenceImagesDirectory imageDiffDirectory:imageDiffDirectory device:device identifier:(identifier) tolerance:tolerance error:&error];
         if (!referenceImageSaved) {
             [errors addObject:error];
         }
@@ -125,7 +126,7 @@
             BOOL referenceImageAvailable = [self referenceImageRecordedInDirectory:referenceImagesDirectory identifier:(identifier) error:&error];
 
             if (referenceImageAvailable) {
-                BOOL comparisonSuccess = [self _compareSnapshotOfViewOrLayer:viewOrLayer referenceImagesDirectory:referenceImagesDirectory imageDiffDirectory:imageDiffDirectory identifier:identifier tolerance:tolerance error:&error];
+                BOOL comparisonSuccess = [self _compareSnapshotOfViewOrLayer:viewOrLayer referenceImagesDirectory:referenceImagesDirectory imageDiffDirectory:imageDiffDirectory device:device identifier:identifier tolerance:tolerance error:&error];
                 [errors removeAllObjects];
                 if (comparisonSuccess) {
                     testSuccess = YES;
@@ -152,6 +153,7 @@
 - (BOOL)compareSnapshotOfLayer:(CALayer *)layer
       referenceImagesDirectory:(NSString *)referenceImagesDirectory
             imageDiffDirectory:(NSString *)imageDiffDirectory
+                        device:(nullable NSString *)device
                     identifier:(NSString *)identifier
                      tolerance:(CGFloat)tolerance
                          error:(NSError **)errorPtr
@@ -159,6 +161,7 @@
     return [self _compareSnapshotOfViewOrLayer:layer
                       referenceImagesDirectory:referenceImagesDirectory
                             imageDiffDirectory:imageDiffDirectory
+                                        device:device
                                     identifier:identifier
                                      tolerance:tolerance
                                          error:errorPtr];
@@ -167,6 +170,7 @@
 - (BOOL)compareSnapshotOfView:(UIView *)view
      referenceImagesDirectory:(NSString *)referenceImagesDirectory
            imageDiffDirectory:(NSString *)imageDiffDirectory
+                       device:(nullable NSString *)device
                    identifier:(NSString *)identifier
                     tolerance:(CGFloat)tolerance
                         error:(NSError **)errorPtr
@@ -174,6 +178,7 @@
     return [self _compareSnapshotOfViewOrLayer:view
                       referenceImagesDirectory:referenceImagesDirectory
                             imageDiffDirectory:imageDiffDirectory
+                                        device:device
                                     identifier:identifier
                                      tolerance:tolerance
                                          error:errorPtr];
@@ -221,6 +226,7 @@
 - (BOOL)_compareSnapshotOfViewOrLayer:(id)viewOrLayer
              referenceImagesDirectory:(NSString *)referenceImagesDirectory
                    imageDiffDirectory:(NSString *)imageDiffDirectory
+                               device:(nullable NSString *)device
                            identifier:(NSString *)identifier
                             tolerance:(CGFloat)tolerance
                                 error:(NSError **)errorPtr
@@ -229,6 +235,7 @@
     _snapshotController.imageDiffDirectory = imageDiffDirectory;
     return [_snapshotController compareSnapshotOfViewOrLayer:viewOrLayer
                                                     selector:self.invocation.selector
+                                                      device:device
                                                   identifier:identifier
                                                    tolerance:tolerance
                                                        error:errorPtr];

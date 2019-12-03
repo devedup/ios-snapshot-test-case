@@ -176,6 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)compareSnapshotOfLayer:(CALayer *)layer
       referenceImagesDirectory:(NSString *)referenceImagesDirectory
             imageDiffDirectory:(NSString *)imageDiffDirectory
+                        device:(nullable NSString *)device
                     identifier:(nullable NSString *)identifier
                      tolerance:(CGFloat)tolerance
                          error:(NSError **)errorPtr;
@@ -193,6 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)compareSnapshotOfView:(UIView *)view
      referenceImagesDirectory:(NSString *)referenceImagesDirectory
            imageDiffDirectory:(NSString *)imageDiffDirectory
+                       device:(nullable NSString *)device
                    identifier:(nullable NSString *)identifier
                     tolerance:(CGFloat)tolerance
                         error:(NSError **)errorPtr;
